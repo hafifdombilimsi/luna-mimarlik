@@ -94,35 +94,90 @@
 
         /* --- HEADER & NAVIGASYON (Glassmorphism) --- */
         header { 
-            padding: 1rem 0; 
+            padding: 0 0; /* Mobilde taşmayı önlemek için paddingi kıstık */
+            height: 80px;
             box-shadow: 0 2px 20px rgba(0,0,0,0.05); 
             position: sticky; top:0; 
-            background: rgba(255,255,255,0.95); /* Yarı saydam beyaz */
-            backdrop-filter: blur(10px); /* Buzlu cam efekti */
+            background: rgba(255,255,255,0.98); 
             z-index: 1000; 
+            display: flex; align-items: center; /* Dikey ortalama */
         }
         
-        nav { display: flex; justify-content: space-between; align-items: center; width: 90%; max-width: 1200px; margin: 0 auto; }
-        
+        nav { 
+                display: flex; 
+                justify-content: space-between; 
+                align-items: center; 
+                width: 90%; 
+                max-width: 1200px; 
+                margin: 0 auto; 
+            }        
         .logo { 
-            font-family: 'Playfair Display', serif; 
-            font-size: 1.6rem; 
-            font-weight: 700; 
-            color: var(--primary); 
-            letter-spacing: 1px;
-        }
+                font-family: 'Playfair Display', serif; 
+                font-size: 1.4rem; /* Mobilde devasa olmasın diye biraz küçülttük */
+                font-weight: 700; 
+                color: var(--primary); 
+                letter-spacing: 1px;
+                z-index: 1002; /* Menü açılsa bile logo görünsün */
+            }
         .logo span { color: var(--secondary); }
         
-        .nav-links { display: flex; align-items: center; }
-        .nav-links a { 
-            margin-left: 25px; 
-            font-weight: 500; 
-            font-size: 0.85rem; 
-            text-transform: uppercase; 
-            letter-spacing: 1px;
-            color: var(--primary);
-            position: relative;
+       /* Masaüstü Menü Stilleri */
+    .nav-links { display: flex; align-items: center; }
+    .nav-links a { 
+        margin-left: 25px; 
+        font-weight: 500; 
+        font-size: 0.85rem; 
+        text-transform: uppercase; 
+        letter-spacing: 1px;
+        color: var(--primary);
+        position: relative;
+    }
+
+    /* Hamburger İkonu (Varsayılan olarak gizli) */
+    .hamburger { display: none; cursor: pointer; z-index: 1002; }
+    .hamburger div {
+        width: 25px; height: 3px; background-color: var(--primary);
+        margin: 5px; transition: all 0.3s ease;
+    }
+
+    /* --- MOBİL İÇİN ÖZEL KURALLAR --- */
+    @media screen and (max-width: 768px) {
+        body { overflow-x: hidden; } /* Sağa sola kaymayı engelle */
+        
+        .nav-links {
+            position: fixed;
+            right: 0px;
+            height: 92vh; /* Header hariç tüm ekran */
+            top: 8vh;
+            background-color: var(--primary); /* Koyu Lacivert Arkaplan */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* Linkleri ortala */
+            width: 100%; /* Tam genişlik */
+            transform: translateX(100%); /* Başlangıçta ekranın sağında gizli */
+            transition: transform 0.5s ease-in;
+            z-index: 1001;
         }
+
+        .nav-links a {
+            color: #fff; /* Mobilde yazılar beyaz olsun */
+            font-size: 1.2rem;
+            margin: 20px 0; /* Alt alta boşluk */
+        }
+
+        .hamburger { display: block; } /* Mobilde hamburgeri göster */
+    }
+
+    /* Javascript ile eklenecek sınıf: Menüyü açar */
+    .nav-active {
+        transform: translateX(0%);
+    }
+
+    /* Hamburger Animasyonu (Çarpı işareti olma) */
+    .toggle .line1 { transform: rotate(-45deg) translate(-5px, 6px); background-color: var(--secondary); }
+    .toggle .line2 { opacity: 0; }
+    .toggle .line3 { transform: rotate(45deg) translate(-5px, -6px); background-color: var(--secondary); }
 
         /* Menü Hover Efekti */
         .nav-links a::after {
@@ -226,19 +281,24 @@
 
     <header>
         <nav>
-            <div class="logo">LUNA <span>İÇ MİMARLIK</span></div>
-            <div class="nav-links">
-                <a href="{% url 'home' %}">Ana Sayfa</a>
-                
-                {% for cat in menu_categories %}
-                    <a href="{% url 'category_projects' cat.pk %}">{{ cat.name }}</a>
-                {% endfor %}
-                
-                <a href="{% url 'blog_index' %}">Blog</a>
-                <a href="{% url 'about' %}">Hakkımızda</a>
-                <a href="{% url 'contact' %}">İletişim</a>
-            </div>
-        </nav>
+        <div class="logo">LUNA <span>İÇ MİMARLIK</span></div>
+        
+        <div class="hamburger">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+        </div>
+
+        <div class="nav-links">
+            <a href="{% url 'home' %}">Ana Sayfa</a>
+            {% for cat in menu_categories %}
+                <a href="{% url 'category_projects' cat.pk %}">{{ cat.name }}</a>
+            {% endfor %}
+            <a href="{% url 'blog_index' %}">Blog</a>
+            <a href="{% url 'about' %}">Hakkımızda</a>
+            <a href="{% url 'contact' %}">İletişim</a>
+        </div>
+    </nav>
     </header>
 
     <div style="min-height: 80vh;">
@@ -362,6 +422,30 @@
         // Tarayıcı hafızasına "Kabul Etti" diye not düş
         localStorage.setItem('cookieAccepted', 'true');
     });
+    // MOBİL MENÜ JS
+    const navSlide = () => {
+        const hamburger = document.querySelector('.hamburger');
+        const nav = document.querySelector('.nav-links');
+        const navLinks = document.querySelectorAll('.nav-links a');
+
+        hamburger.addEventListener('click', () => {
+            // Menüyü Aç/Kapa
+            nav.classList.toggle('nav-active');
+
+            // Hamburger İkonunu Çarpıya Dönüştür
+            hamburger.classList.toggle('toggle');
+        });
+        
+        // Menüden bir şeye tıklayınca menüyü kapat (Kullanıcı deneyimi için önemli)
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                 nav.classList.remove('nav-active');
+                 hamburger.classList.remove('toggle');
+            });
+        });
+    }
+
+    navSlide(); // Fonksiyonu çalıştır
 </script>
 </body>
 </html>
