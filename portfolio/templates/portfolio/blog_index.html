@@ -1,0 +1,28 @@
+{% extends 'portfolio/base.html' %}
+
+{% block content %}
+<section class="container">
+    <h1 style="text-align: center; margin-bottom: 1rem;">Blog & Haberler</h1>
+    <p style="text-align: center; color: #666; margin-bottom: 3rem;">Dekorasyon dünyasından en son trendler ve ipuçları.</p>
+    
+    <div class="project-grid">
+        {% for post in posts %}
+        <a href="{% url 'blog_detail' post.pk %}">
+            <div class="project-card" data-aos="zoom-in">
+                {% if post.image %}
+                <img src="{{ post.image.url }}" alt="{{ post.title }}">
+                {% endif %}
+                <div class="project-info">
+                    <span style="font-size: 0.8rem; color: #999;">{{ post.created_at|date:"d M Y" }}</span>
+                    <h3 style="margin-top: 0.5rem;">{{ post.title }}</h3>
+                    <p style="color: #666; margin-top: 0.5rem;">{{ post.content|truncatewords:15 }}</p>
+                    <span style="color: #d4af37; font-weight: bold; font-size: 0.9rem;">Devamını Oku →</span>
+                </div>
+            </div>
+        </a>
+        {% empty %}
+            <p>Henüz blog yazısı eklenmemiş.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

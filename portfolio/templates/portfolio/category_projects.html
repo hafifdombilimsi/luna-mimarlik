@@ -1,0 +1,24 @@
+{% extends 'portfolio/base.html' %}
+
+{% block content %}
+<section class="container">
+    <h2 style="text-align: center; margin-bottom: 2rem;">{{ category.name }} Projeleri</h2>
+
+    <div class="project-grid">
+        {% for project in projects %}
+        <a href="{% url 'project_detail' project.pk %}">
+            <div class="project-card">
+                {% if project.image %}
+                <img src="{{ project.image.url }}" alt="{{ project.title }}">
+                {% endif %}
+                <div class="project-info">
+                    <h3>{{ project.title }}</h3>
+                </div>
+            </div>
+        </a>
+        {% empty %}
+            <p>Bu kategoride henüz proje yok.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'portfolio/base.html' %}
+
+{% block content %}
+<div class="error-page">
+    <div class="error-content">
+        <h1 class="error-code">404</h1>
+        <h2>Aradığınız Mekan Bulunamadı</h2>
+        <p>Tıpkı boş bir arsa gibi... Ama endişelenmeyin, sizi ana sayfaya götürebiliriz.</p>
+        <a href="{% url 'home' %}" class="btn-gold">Ana Sayfaya Dön</a>
+    </div>
+</div>
+
+<style>
+    .error-page {
+        height: 70vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        background-color: #f8f9fa;
+    }
+    .error-code {
+        font-size: 8rem;
+        color: #d4af37;
+        margin-bottom: 0;
+        line-height: 1;
+        opacity: 0.5;
+    }
+    .error-content h2 { font-size: 2rem; margin-bottom: 1rem; }
+</style>
+{% endblock %}

@@ -1,0 +1,173 @@
+{% extends 'portfolio/base.html' %}
+
+{% block content %}
+<div class="container" data-aos="fade-up">
+    <h1 style="text-align: center; margin-bottom: 3rem;">İletişime Geçin</h1>
+
+    <div class="contact-grid">
+        
+        <div class="contact-info" >
+            <h3>Ofisimize Bekleriz</h3>
+            <p style="margin-bottom: 2rem; color: #666;">Projeleriniz hakkında konuşmak ve kahvemizi içmek için ofisimize her zaman bekleriz.</p>
+            
+            <div class="info-item">
+                <div class="icon">📍</div>
+                <div>
+                    <strong>Adres</strong>
+                    <p>Çankaya Mah. Atatürk Bulvarı<br>No: 123, Daire: 5<br>Çankaya / ANKARA</p>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="icon">📞</div>
+                <div>
+                    <strong>Telefon</strong>
+                    <p>+90 (312) 555 00 11</p>
+                    <p>+90 (532) 555 00 22</p>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="icon">✉️</div>
+                <div>
+                    <strong>E-Posta</strong>
+                    <p>info@lunaicmimarlik.com</p>
+                </div>
+            </div>
+
+            <div class="map-container">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d48997.51372671236!2d32.8095!3d39.9207!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14d34e6e6a12345%3A0x123456789!2sAnkara!5e0!3m2!1str!2str!4v1600000000000" 
+                    width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy">
+                </iframe>
+            </div>
+        </div>
+
+        <div class="contact-form-wrapper">
+            {% if success %}
+                <div class="success-box">
+                    <h3>Teşekkürler!</h3>
+                    <p>Mesajınız bize ulaştı. En kısa sürede dönüş yapacağız.</p>
+                    <a href="{% url 'home' %}">Ana Sayfaya Dön</a>
+                </div>
+            {% else %}
+                <form method="post">
+                    {% csrf_token %}
+                    <h3 style="margin-bottom: 1.5rem;">Bize Yazın</h3>
+                    
+                    <div class="form-group">
+                        <label>Ad Soyad</label>
+                        {{ form.name }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>E-posta</label>
+                        {{ form.email }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Mesajınız</label>
+                        {{ form.message }}
+                    </div>
+
+                    <button type="submit" class="submit-btn">GÖNDER</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    /* İki Sütunlu Yapı (Grid) */
+    .contact-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Ekranı ikiye böl */
+        gap: 4rem; /* Aradaki boşluk */
+    }
+
+    /* Sol Taraf Stilleri */
+    .info-item {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 1.5rem;
+    }
+    .icon {
+        background-color: #f0f0f0;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        font-size: 1.2rem;
+    }
+    .map-container {
+        margin-top: 2rem;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    /* Sağ Taraf (Form) Stilleri */
+    .contact-form-wrapper {
+        background: #fff;
+        padding: 2.5rem;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        border: 1px solid #eee;
+    }
+    .form-group { margin-bottom: 1.5rem; }
+    .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333; }
+    
+    /* Input Stilleri (forms.py'den gelen classlar için) */
+    .form-control {
+        width: 100%;
+        padding: 1rem;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        font-family: 'Montserrat', sans-serif;
+        background-color: #fcfcfc;
+        transition: 0.3s;
+    }
+    .form-control:focus {
+        border-color: #d4af37;
+        background-color: #fff;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 1rem;
+        background-color: #0a192f;
+        color: white;
+        border: none;
+        font-weight: bold;
+        cursor: pointer;
+        border-radius: 6px;
+        transition: 0.3s;
+    }
+    .submit-btn:hover {
+        background-color: #d4af37;
+    }
+
+    .success-box {
+        background-color: #d4edda;
+        color: #155724;
+        padding: 2rem;
+        border-radius: 8px;
+        text-align: center;
+    }
+    .success-box a { color: #155724; font-weight: bold; text-decoration: underline; }
+
+    /* Mobilde alt alta düşmesi için */
+    @media (max-width: 768px) {
+        .contact-grid {
+            grid-template-columns: 1fr; /* Tek sütuna düşür */
+            gap: 3rem;
+        }
+        .container { padding: 2rem 0; }
+    }
+</style>
+{% endblock %}

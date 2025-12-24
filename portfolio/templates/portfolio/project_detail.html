@@ -1,0 +1,124 @@
+{% extends 'portfolio/base.html' %}
+{% block meta_tags %}
+    <meta property="og:title" content="{{ project.title }} - Luna İç Mimarlık">
+    <meta name="twitter:title" content="{{ project.title }} - Luna İç Mimarlık">
+
+    <meta name="description" content="{{ project.description|striptags|truncatechars:150 }}">
+    <meta property="og:description" content="{{ project.description|striptags|truncatechars:150 }}">
+    <meta name="twitter:description" content="{{ project.description|striptags|truncatechars:150 }}">
+
+    {% if project.image %}
+    <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ project.image.url }}">
+    <meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{{ project.image.url }}">
+    {% endif %}
+
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:type" content="article">
+{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 1000px;">
+    <a href="{% url 'home' %}" class="back-link">← Ana Sayfaya Dön</a>
+    
+    <div class="project-header" data-aos="fade-up">
+        <div class="meta">{{ project.category.name }}</div>
+        <h1>{{ project.title }}</h1>
+    </div>
+    
+    {% if project.image %}
+    <div data-aos="zoom-in" data-aos-delay="200">
+        <a href="{{ project.image.url }}" data-lightbox="project-gallery" data-title="{{ project.title }}">
+            <img src="{{ project.image.url }}" alt="{{ project.title }}" class="detail-img">
+        </a>
+    </div>
+    {% endif %}
+    
+    <div class="content" data-aos="fade-up" data-aos-delay="300">
+        {{ project.description|linebreaks }}
+    </div>
+
+    {% if project.transformations.all %}
+    <div class="transformation-section" data-aos="fade-up">
+        <h2>Değişim Hikayesi</h2>
+        <p style="text-align: center; margin-bottom: 2rem;">Sürgüyü sağa sola çekerek değişimi görebilirsiniz.</p>
+        
+        {% for trans in project.transformations.all %}
+        <div class="trans-item">
+            <h3 style="text-align: center; margin-bottom: 1rem;">{{ trans.title }}</h3>
+            
+            <div class="comp-container">
+                <div class="comp-img comp-background">
+                    <img src="{{ trans.image_after.url }}" alt="Sonrası">
+                </div>
+                <div class="comp-img comp-foreground">
+                    <img src="{{ trans.image_before.url }}" alt="Öncesi">
+                </div>
+                <input type="range" min="0" max="100" value="50" class="comp-slider" oninput="updateSlider(this)">
+                <div class="comp-slider-button">↔</div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    /* Link Stili */
+    .back-link { display: inline-block; margin-bottom: 1rem; font-weight: 600; color: #666; font-size: 0.9rem; }
+    .back-link:hover { color: var(--secondary); transform: translateX(-5px); }
+
+    /* Başlık Alanı */
+    .project-header { text-align: center; margin-bottom: 3rem; }
+    .meta { color: var(--secondary); font-weight: 600; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.5rem; font-size: 0.9rem; }
+
+    /* ANA RESİM DÜZELTMESİ (Önemli Kısım) */
+    .detail-img { 
+        width: 100%; 
+        height: auto !important; /* Kartlardaki 300px zorlamasını iptal et */
+        max-height: 600px; /* Çok uzun resimler ekranı kaplamasın */
+        object-fit: contain; /* Resmi kesmeden sığdır */
+        border-radius: 8px; 
+        margin-bottom: 3rem; 
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    /* İçerik Metni */
+    .content { font-size: 1.1rem; line-height: 2; color: #444; margin-bottom: 4rem; text-align: justify; }
+
+    /* Değişim Bölümü */
+    .transformation-section { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid #eee; }
+    .transformation-section h2 { text-align: center; display: block; }
+    
+    /* Before/After Konteynerı */
+    .comp-container {
+        position: relative;
+        width: 100%; max-width: 800px; margin: 0 auto;
+        overflow: hidden; border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        aspect-ratio: 16/9; /* Resim oranını koru */
+    }
+    .comp-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+    .comp-img img { width: 100%; height: 100%; object-fit: cover; } /* Burası cover kalabilir çünkü kutu içinde */
+    .comp-foreground { width: 50%; border-right: 3px solid #d4af37; overflow: hidden; z-index: 2; }
+    .comp-slider { position: absolute; width: 100%; height: 100%; top: 0; left: 0; opacity: 0; cursor: col-resize; z-index: 3; margin: 0; }
+    .comp-slider-button {
+        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        width: 40px; height: 40px; background: #d4af37; color: white;
+        border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        font-weight: bold; z-index: 4; pointer-events: none;
+        box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+    .trans-item { margin-bottom: 4rem; }
+</style>
+
+<script>
+    function updateSlider(element) {
+        var container = element.parentElement;
+        var foregroundImg = container.querySelector('.comp-foreground');
+        var button = container.querySelector('.comp-slider-button');
+        var val = element.value;
+        foregroundImg.style.width = val + "%";
+        button.style.left = val + "%";
+    }
+</script>
+{% endblock %}

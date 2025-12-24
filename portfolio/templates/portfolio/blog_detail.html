@@ -1,0 +1,60 @@
+{% extends 'portfolio/base.html' %}
+{% block meta_tags %}
+    <meta property="og:title" content="{{ post.title }}">
+    <meta name="description" content="{{ post.content|striptags|truncatechars:150 }}">
+    <meta property="og:description" content="{{ post.content|striptags|truncatechars:150 }}">
+    
+    {% if post.image %}
+    <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ post.image.url }}">
+    {% endif %}
+
+    <meta property="og:type" content="article">
+{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 800px;">
+    <a href="{% url 'blog_index' %}" class="back-link">← Tüm Yazılara Dön</a>
+    
+    <div class="blog-header" data-aos="fade-down">
+        <h1>{{ post.title }}</h1>
+        <p class="date">📅 {{ post.created_at|date:"d F Y" }}</p>
+    </div>
+    
+    {% if post.image %}
+    <div data-aos="fade-up">
+        <img src="{{ post.image.url }}" alt="{{ post.title }}" class="detail-img">
+    </div>
+    {% endif %}
+    
+    <div class="blog-content" data-aos="fade-up" data-aos-delay="100">
+        {{ post.content|linebreaks }}
+    </div>
+</div>
+
+<style>
+    .back-link { display: inline-block; margin-bottom: 2rem; color: #666; font-weight: 500; font-size: 0.9rem; }
+    .back-link:hover { color: var(--secondary); }
+
+    .blog-header { text-align: center; margin-bottom: 2rem; }
+    .date { color: #999; font-size: 0.9rem; margin-top: 0.5rem; }
+
+    /* BLOG RESMİ DÜZELTMESİ */
+    .detail-img {
+        width: 100%;
+        height: auto !important; /* Önemli: Esnemeyi engeller */
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 2.5rem;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    }
+
+    /* Okuma Modu Ayarları */
+    .blog-content {
+        font-size: 1.15rem; /* Biraz daha büyük font */
+        line-height: 1.9; /* Rahat okuma için satır aralığı */
+        color: #333;
+        font-weight: 400; /* Gövde metni biraz daha dolgun olsun */
+    }
+    .blog-content p { margin-bottom: 1.5rem; }
+</style>
+{% endblock %}
