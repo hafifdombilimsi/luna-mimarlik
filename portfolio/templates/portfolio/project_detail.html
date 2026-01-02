@@ -1,60 +1,70 @@
 {% extends 'portfolio/base.html' %}
-{% block meta_tags %}
-    <meta property="og:title" content="{{ project.title }} - Luna İç Mimarlık">
-    <meta name="twitter:title" content="{{ project.title }} - Luna İç Mimarlık">
-
-    <meta name="description" content="{{ project.description|striptags|truncatechars:150 }}">
-    <meta property="og:description" content="{{ project.description|striptags|truncatechars:150 }}">
-    <meta name="twitter:description" content="{{ project.description|striptags|truncatechars:150 }}">
-
-    {% if project.image %}
-    <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ project.image.url }}">
-    <meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{{ project.image.url }}">
-    {% endif %}
-
-    <meta property="og:url" content="{{ request.build_absolute_uri }}">
-    <meta property="og:type" content="article">
-{% endblock %}
 
 {% block content %}
-<div class="container" style="max-width: 1000px;">
-    <a href="{% url 'home' %}" class="back-link">← Ana Sayfaya Dön</a>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" />
+
+<div class="container" style="max-width: 1000px; padding-top: 2rem;">
+    <a href="{% url 'portfolio' %}" class="back-link">← Portfolyoya Dön</a>
     
     <div class="project-header" data-aos="fade-up">
         <div class="meta">{{ project.category.name }}</div>
         <h1>{{ project.title }}</h1>
     </div>
     
-    {% if project.image %}
-    <div data-aos="zoom-in" data-aos-delay="200">
-        <a href="{{ project.image.url }}" data-lightbox="project-gallery" data-title="{{ project.title }}">
-            <img src="{{ project.image.url }}" alt="{{ project.title }}" class="detail-img">
-        </a>
+    <div class="slider-wrapper" data-aos="fade-up" data-aos-delay="200">
+        <div class="swiper projectSwiper">
+            <div class="swiper-wrapper">
+                
+                {% if project.image %}
+                <div class="swiper-slide">
+                    <a href="{{ project.image.url }}" data-lightbox="project-gallery" data-title="{{ project.title }} - Kapak">
+                        <img src="{{ project.image.url }}" alt="{{ project.title }}" class="slide-img">
+                    </a>
+                </div>
+                {% endif %}
+
+                {% for img in project.images.all %}
+                <div class="swiper-slide">
+                    <a href="{{ img.image.url }}" data-lightbox="project-gallery" data-title="{{ project.title }} - Detay">
+                        <img src="{{ img.image.url }}" alt="Detay" class="slide-img">
+                    </a>
+                </div>
+                {% endfor %}
+
+            </div>
+            
+            <div class="swiper-button-next" style="color: #fff;"></div>
+            <div class="swiper-button-prev" style="color: #fff;"></div>
+            <div class="swiper-pagination"></div>
+        </div>
     </div>
-    {% endif %}
     
     <div class="content" data-aos="fade-up" data-aos-delay="300">
         {{ project.description|linebreaks }}
     </div>
 
     {% if project.transformations.all %}
-    <div class="transformation-section" data-aos="fade-up">
+    <div class="transformation-section">
         <h2>Değişim Hikayesi</h2>
-        <p style="text-align: center; margin-bottom: 2rem;">Sürgüyü sağa sola çekerek değişimi görebilirsiniz.</p>
-        
+        <p style="text-align: center; margin-bottom: 2rem; color: #666;">Sürgüyü sağa sola çekerek değişimi görebilirsiniz.</p>
         {% for trans in project.transformations.all %}
         <div class="trans-item">
             <h3 style="text-align: center; margin-bottom: 1rem;">{{ trans.title }}</h3>
             
-            <div class="comp-container">
+            <div class="comp-container js-comp-container">
                 <div class="comp-img comp-background">
-                    <img src="{{ trans.image_after.url }}" alt="Sonrası">
+                    <img src="{{ trans.image_after.url }}" alt="Sonra">
                 </div>
+                
                 <div class="comp-img comp-foreground">
-                    <img src="{{ trans.image_before.url }}" alt="Öncesi">
+                    <img src="{{ trans.image_before.url }}" alt="Önce">
                 </div>
-                <input type="range" min="0" max="100" value="50" class="comp-slider" oninput="updateSlider(this)">
-                <div class="comp-slider-button">↔</div>
+                
+                <input type="range" min="0" max="100" value="50" class="comp-slider js-comp-slider" oninput="updateSlider(this)">
+                
+                <div class="comp-slider-button js-comp-button">↔</div>
             </div>
         </div>
         {% endfor %}
@@ -62,63 +72,120 @@
     {% endif %}
 </div>
 
-<style>
-    /* Link Stili */
-    .back-link { display: inline-block; margin-bottom: 1rem; font-weight: 600; color: #666; font-size: 0.9rem; }
-    .back-link:hover { color: var(--secondary); transform: translateX(-5px); }
-
-    /* Başlık Alanı */
-    .project-header { text-align: center; margin-bottom: 3rem; }
-    .meta { color: var(--secondary); font-weight: 600; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.5rem; font-size: 0.9rem; }
-
-    /* ANA RESİM DÜZELTMESİ (Önemli Kısım) */
-    .detail-img { 
-        width: 100%; 
-        height: auto !important; /* Kartlardaki 300px zorlamasını iptal et */
-        max-height: 600px; /* Çok uzun resimler ekranı kaplamasın */
-        object-fit: contain; /* Resmi kesmeden sığdır */
-        border-radius: 8px; 
-        margin-bottom: 3rem; 
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    }
-
-    /* İçerik Metni */
-    .content { font-size: 1.1rem; line-height: 2; color: #444; margin-bottom: 4rem; text-align: justify; }
-
-    /* Değişim Bölümü */
-    .transformation-section { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid #eee; }
-    .transformation-section h2 { text-align: center; display: block; }
-    
-    /* Before/After Konteynerı */
-    .comp-container {
-        position: relative;
-        width: 100%; max-width: 800px; margin: 0 auto;
-        overflow: hidden; border-radius: 8px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        aspect-ratio: 16/9; /* Resim oranını koru */
-    }
-    .comp-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-    .comp-img img { width: 100%; height: 100%; object-fit: cover; } /* Burası cover kalabilir çünkü kutu içinde */
-    .comp-foreground { width: 50%; border-right: 3px solid #d4af37; overflow: hidden; z-index: 2; }
-    .comp-slider { position: absolute; width: 100%; height: 100%; top: 0; left: 0; opacity: 0; cursor: col-resize; z-index: 3; margin: 0; }
-    .comp-slider-button {
-        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-        width: 40px; height: 40px; background: #d4af37; color: white;
-        border-radius: 50%; display: flex; align-items: center; justify-content: center;
-        font-weight: bold; z-index: 4; pointer-events: none;
-        box-shadow: 0 0 10px rgba(0,0,0,0.5);
-    }
-    .trans-item { margin-bottom: 4rem; }
-</style>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
 
 <script>
+    // Swiper Slider Ayarları
+    var swiper = new Swiper(".projectSwiper", {
+        navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
+        pagination: { el: ".swiper-pagination", clickable: true },
+        loop: true,
+        grabCursor: true,
+        autoHeight: true,
+        spaceBetween: 30,
+    });
+
+    // Lightbox Ayarları
+    lightbox.option({
+      'resizeDuration': 200,
+      'wrapAround': true,
+      'albumLabel': "Resim %1 / %2"
+    });
+    
+    // --- BEFORE/AFTER JAVASCRIPT DÜZELTMESİ ---
+
+    // 1. Slider hareket ettiğinde çalışacak fonksiyon
     function updateSlider(element) {
-        var container = element.parentElement;
+        var container = element.closest('.js-comp-container'); // En yakın kapsayıcıyı bul
         var foregroundImg = container.querySelector('.comp-foreground');
-        var button = container.querySelector('.comp-slider-button');
+        var button = container.querySelector('.js-comp-button');
         var val = element.value;
+        
+        // Öndeki resmin genişliğini ve butonun konumunu input değerine göre ayarla
         foregroundImg.style.width = val + "%";
         button.style.left = val + "%";
     }
+
+    // 2. Sayfa ilk yüklendiğinde çalışacak Başlangıç Fonksiyonu (Sorun 1 Çözümü)
+    function initComparisons() {
+        var sliders = document.querySelectorAll('.js-comp-slider');
+        sliders.forEach(function(slider) {
+            // Her bir slider için update fonksiyonunu manuel olarak bir kez tetikle
+            updateSlider(slider);
+        });
+    }
+
+    // Sayfa tamamen yüklendiğinde (resimler dahil) başlat
+    window.addEventListener('load', initComparisons);
+    // Ekran boyutu değişirse tekrar ayarla (Mobil uyum için)
+    window.addEventListener('resize', initComparisons);
+
 </script>
+
+<style>
+    /* ... (Genel stiller aynı kalıyor) ... */
+    .back-link { display: inline-block; margin-bottom: 1rem; font-weight: 600; color: #666; font-size: 0.9rem; text-decoration: none; }
+    .back-link:hover { color: var(--secondary); transform: translateX(-5px); }
+    .project-header { text-align: center; margin-bottom: 2rem; }
+    .meta { color: var(--secondary); font-weight: 600; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.5rem; font-size: 0.9rem; }
+    .slider-wrapper { margin-bottom: 3rem; box-shadow: 0 15px 40px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden; }
+    .slide-img { width: 100%; max-height: 600px; object-fit: cover; display: block; }
+    .content { font-size: 1.1rem; line-height: 2; color: #444; margin-bottom: 4rem; text-align: justify; }
+
+    /* --- BEFORE/AFTER DÜZELTİLMİŞ CSS (ZOOM SORUNU İÇİN) --- */
+    .transformation-section { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid #eee; }
+    
+    .comp-container { 
+        position: relative; 
+        width: 100%; 
+        max-width: 800px; 
+        margin: 0 auto; 
+        overflow: hidden; 
+        border-radius: 8px; 
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2); 
+        /* aspect-ratio: 16/9;  <-- BU SATIRI SİLDİK! Kutu artık resim kadar olacak. */
+        background-color: #f0f0f0; 
+        transform: translateZ(0); 
+    }
+    
+    /* Arka Plan Resmi - Artık Kutunun Yüksekliğini Bu Belirleyecek */
+    .comp-background { 
+        position: relative; /* Absolute değil Relative yaptık */
+        width: 100%; 
+        z-index: 1; 
+        display: block; /* Boşluk kalmasın */
+        line-height: 0;
+    }
+    
+    .comp-background img { 
+        width: 100%; 
+        height: auto; /* Yükseklik otomatik, zoom yok! */
+        display: block; 
+    }
+
+    /* Ön Plan (Maskelenen Kısım) */
+    .comp-foreground { 
+        position: absolute; /* Bu hala absolute kalmalı */
+        top: 0; left: 0; bottom: 0; /* Yüksekliği kapsayıcıya eşitle */
+        width: 50%; 
+        overflow: hidden; 
+        z-index: 2; 
+        border-right: 3px solid #d4af37; 
+        background-color: transparent; 
+    }
+
+    /* Ön Plan Resmi */
+    .comp-foreground img { 
+        height: 100%; 
+        width: auto; /* Yüksekliğe göre genişle */
+        max-width: none; /* Asla daralma */
+        display: block;
+    }
+
+    /* Slider Kontrolleri (Aynı) */
+    .comp-slider { position: absolute; width: 100%; height: 100%; top: 0; left: 0; opacity: 0; cursor: ew-resize; z-index: 3; margin: 0; }
+    .comp-slider-button { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; background: #d4af37; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; z-index: 4; pointer-events: none; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
+    .trans-item { margin-bottom: 4rem; }
+</style>
 {% endblock %}

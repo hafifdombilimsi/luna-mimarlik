@@ -1,0 +1,50 @@
+{% extends 'portfolio/base.html' %}
+
+{% block content %}
+<div class="hero-small">
+    <h1>Portfolyo</h1>
+</div>
+
+<div class="container">
+    <div class="project-grid">
+        {% for project in projects %}
+        <a href="{% url 'project_detail' project.pk %}">
+            <div class="project-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="card-img-wrapper">
+                    <img src="{{ project.image.url }}" alt="{{ project.title }}">
+                </div>
+                <div class="project-info">
+                    <div class="cat-tag">{{ project.category.name }}</div>
+                    <h3>{{ project.title }}</h3>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    /* Küçük Hero Alanı (Sayfa Başlığı) */
+    .hero-small {
+        height: 40vh;
+        background-color: var(--primary);
+        display: flex; align-items: center; justify-content: center;
+        color: #fff;
+        margin-bottom: 4rem;
+    }
+
+    /* Proje Kart Stilleri (Base.html'de varsa buraya gerek yok ama garanti olsun) */
+    .cat-tag {
+        color: var(--secondary);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    .project-card h3 { font-size: 1.4rem; margin-bottom: 0.5rem; }
+    .card-img-wrapper { overflow: hidden; height: 300px; }
+    .card-img-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+    .project-card:hover .card-img-wrapper img { transform: scale(1.1); }
+</style>
+{% endblock %}

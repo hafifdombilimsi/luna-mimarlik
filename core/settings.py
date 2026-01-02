@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-t+jngw8uub%)g@lhr!w0oran-^#ms=3zgg^^g5#fkq*%ud%4i+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -64,7 +64,7 @@ TEMPLATES = [
             'django.template.context_processors.request',
             'django.contrib.auth.context_processors.auth',
             'django.contrib.messages.context_processors.messages',
-            'portfolio.context_processors.menu_categories', 
+            'portfolio.context_processors.global_settings',
         ],
         },
     },

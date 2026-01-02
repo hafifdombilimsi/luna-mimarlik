@@ -101,3 +101,36 @@ class Service(models.Model):
         verbose_name = "Hizmet"
         verbose_name_plural = "Hizmetler"
         ordering = ['order']
+
+# Mevcut Project modelin duruyor, altına bunu ekle:
+
+class ProjectImage(models.Model):
+    project = models.ForeignKey(Project, related_name='images', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='project_gallery/', verbose_name="Detay Resmi")
+    
+    def __str__(self):
+        return f"{self.project.title} - Resim"
+    
+# SİTE AYARLARI MODELİ (İletişim & Hakkımızda)
+class SiteSettings(models.Model):
+    # İletişim Bilgileri
+    phone = models.CharField(max_length=20, verbose_name="Telefon Numarası")
+    email = models.EmailField(verbose_name="E-posta Adresi")
+    address = models.TextField(verbose_name="Adres")
+    map_link = models.TextField(verbose_name="Google Maps Embed Linki (iframe içindeki src)", blank=True, null=True)
+    
+    # Sosyal Medya
+    instagram = models.URLField(verbose_name="Instagram Linki", blank=True, null=True)
+    linkedin = models.URLField(verbose_name="LinkedIn Linki", blank=True, null=True)
+    
+    # Hakkımızda Sayfası Bilgileri
+    about_title = models.CharField(max_length=200, verbose_name="Hakkımızda Başlık", default="Biz Kimiz?")
+    about_description = models.TextField(verbose_name="Hakkımızda Metni")
+    about_image = models.ImageField(upload_to='site/', verbose_name="Hakkımızda Görseli", blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Site Ayarları"
+        verbose_name_plural = "Site Ayarları"
+
+    def __str__(self):
+        return "Site Genel Ayarları (Lütfen sadece 1 adet oluşturun)"

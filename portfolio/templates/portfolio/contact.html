@@ -10,20 +10,12 @@
             <h3>Ofisimize Bekleriz</h3>
             <p style="margin-bottom: 2rem; color: #666;">Projeleriniz hakkında konuşmak ve kahvemizi içmek için ofisimize her zaman bekleriz.</p>
             
-            <div class="info-item">
-                <div class="icon">📍</div>
-                <div>
-                    <strong>Adres</strong>
-                    <p>Çankaya Mah. Atatürk Bulvarı<br>No: 123, Daire: 5<br>Çankaya / ANKARA</p>
-                </div>
-            </div>
 
             <div class="info-item">
                 <div class="icon">📞</div>
                 <div>
                     <strong>Telefon</strong>
-                    <p>+90 (312) 555 00 11</p>
-                    <p>+90 (532) 555 00 22</p>
+                    <p>{{ site_info.phone }}</p>
                 </div>
             </div>
 
@@ -31,15 +23,16 @@
                 <div class="icon">✉️</div>
                 <div>
                     <strong>E-Posta</strong>
-                    <p>info@lunaicmimarlik.com</p>
+                    <p>{{ site_info.email }}</p>
                 </div>
             </div>
 
             <div class="map-container">
-                <iframe 
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d48997.51372671236!2d32.8095!3d39.9207!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14d34e6e6a12345%3A0x123456789!2sAnkara!5e0!3m2!1str!2str!4v1600000000000" 
-                    width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy">
-                </iframe>
+                {% if site_info.map_link %}
+                    <iframe src="{{ site_info.map_link }}" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                {% else %}
+                    <p style="text-align:center; padding:50px;">Harita yüklenemedi.</p>
+                {% endif %}
             </div>
         </div>
 

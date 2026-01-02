@@ -281,24 +281,21 @@
 
     <header>
         <nav>
-        <div class="logo">LUNA <span>İÇ MİMARLIK</span></div>
-        
-        <div class="hamburger">
-            <div class="line1"></div>
-            <div class="line2"></div>
-            <div class="line3"></div>
-        </div>
+            <a href="{% url 'home' %}" class="logo-link">
+                <div class="logo">LUNA <span>İÇ MİMARLIK</span></div>
+            </a>
+            
+            <div class="hamburger">
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="line3"></div>
+            </div>
 
-        <div class="nav-links">
-            <a href="{% url 'home' %}">Ana Sayfa</a>
-            {% for cat in menu_categories %}
-                <a href="{% url 'category_projects' cat.pk %}">{{ cat.name }}</a>
-            {% endfor %}
-            <a href="{% url 'blog_index' %}">Blog</a>
-            <a href="{% url 'about' %}">Hakkımızda</a>
-            <a href="{% url 'contact' %}">İletişim</a>
-        </div>
-    </nav>
+            <div class="nav-links">
+                <a href="{% url 'portfolio' %}">Portfolyo</a> <a href="{% url 'about' %}">Hakkımızda</a>
+                <a href="{% url 'contact' %}">İletişim</a>
+                </div>
+        </nav>
     </header>
 
     <div style="min-height: 80vh;">
@@ -320,26 +317,23 @@
                 </p>
             </div>
             <div class="footer-col">
-                <h4>Hızlı Linkler</h4>
-                <ul class="footer-links">
-                    <li><a href="{% url 'home' %}">Ana Sayfa</a></li>
-                    <li><a href="{% url 'about' %}">Hakkımızda</a></li>
-                    <li><a href="{% url 'blog_index' %}">Blog & Haberler</a></li>
-                    <li><a href="{% url 'contact' %}">İletişim</a></li>
-                </ul>
+                
             </div>
-            <div class="footer-col">
-                <h4>İletişim</h4>
-                <ul class="footer-contact">
-                    <li>📍 Çankaya Mah. Atatürk Bulvarı, Ankara</li>
-                    <li>📞 +90 (312) 555 00 11</li>
-                    <li>✉️ info@lunaicmimarlik.com</li>
-                </ul>
-                <div class="social-icons">
-                    <a href="#">IG</a>
-                    <a href="#">IN</a>
-                    <a href="#">FB</a>
-                </div>
+            <div class="footer-info">
+                <div class="logo" style="margin-bottom: 1rem; color: #fff;">İletişim</div>
+
+                {% if site_info %}
+                    <p><strong>Tel:</strong> {{ site_info.phone }}</p> <p><strong>E-posta:</strong> {{ site_info.email }}</p> <div class="social-links">
+                        {% if site_info.instagram %}
+                            <a href="{{ site_info.instagram }}" target="_blank">Instagram</a>
+                        {% endif %}
+                        {% if site_info.linkedin %}
+                            <a href="{{ site_info.linkedin }}" target="_blank">LinkedIn</a>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <p>Lütfen Admin Panelinden Site Ayarlarını giriniz.</p>
+                {% endif %}
             </div>
         </div>
         <div class="footer-bottom">
@@ -402,6 +396,7 @@
     @media (max-width: 768px) {
         .cookie-banner { flex-direction: column; text-align: center; gap: 1rem; }
     }
+    .logo-link { text-decoration: none; display: flex; align-items: center; }
 </style>
 
 <script>

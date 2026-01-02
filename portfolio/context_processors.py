@@ -1,6 +1,7 @@
-from .models import Category
+from .models import SiteSettings
 
-def menu_categories(request):
-    # Veritabanından sadece 'show_in_menu' kutusu işaretli olanları çek
-    categories = Category.objects.filter(show_in_menu=True)
-    return {'menu_categories': categories}
+def global_settings(request):
+    # Veritabanındaki ilk ayar kaydını çekiyoruz
+    settings = SiteSettings.objects.first()
+    # Tüm şablonlara 'site_info' adıyla gönderiyoruz
+    return {'site_info': settings}
