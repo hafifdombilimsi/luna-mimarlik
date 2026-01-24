@@ -29,8 +29,8 @@
     <style>
         /* --- MODERN & LÜKS TİPOGRAFİ VE TEMEL AYARLAR --- */
         :root { 
-            --primary: #0a192f;  /* Koyu Lacivert */
-            --secondary: #d4af37; /* Altın */
+            --primary: #3b5875;  /* Koyu Lacivert */
+            --secondary: #d4ccc1; /* Altın */
             --bg: #f8f9fa; 
             --text-dark: #2c3e50;
             --text-light: #6c757d;
@@ -50,7 +50,7 @@
 
         /* --- BAŞLIKLAR (Typography) --- */
         h1, h2, h3, h4, h5 { 
-            font-family: 'Playfair Display', serif; 
+            font-family: 'Montserrat', sans-serif; 
             color: var(--primary); 
             line-height: 1.3;
         }
@@ -112,7 +112,7 @@
                 margin: 0 auto; 
             }        
         .logo { 
-                font-family: 'Playfair Display', serif; 
+                font-family: 'Montserrat', sans-serif;  
                 font-size: 1.4rem; /* Mobilde devasa olmasın diye biraz küçülttük */
                 font-weight: 700; 
                 color: var(--primary); 
@@ -265,7 +265,7 @@
         }
         .social-icons a:hover { background: var(--secondary); color: var(--primary); }
         .footer-bottom {
-            background-color: #050d1a; text-align: center; padding: 1.5rem;
+            background-color: #242933; text-align: center; padding: 1.5rem;
             font-size: 0.8rem; color: #666; border-top: 1px solid rgba(255,255,255,0.05);
         }
     </style>
@@ -323,7 +323,7 @@
                 <div class="logo" style="margin-bottom: 1rem; color: #fff;">İletişim</div>
 
                 {% if site_info %}
-                    <p><strong>Tel:</strong> {{ site_info.phone }}</p> <p><strong>E-posta:</strong> {{ site_info.email }}</p> <div class="social-links">
+                    <p><strong>E-posta:</strong> {{ site_info.email }}</p> <div class="social-links">
                         {% if site_info.instagram %}
                             <a href="{{ site_info.instagram }}" target="_blank">Instagram</a>
                         {% endif %}

@@ -7,17 +7,10 @@
     <div class="contact-grid">
         
         <div class="contact-info" >
-            <h3>Ofisimize Bekleriz</h3>
-            <p style="margin-bottom: 2rem; color: #666;">Projeleriniz hakkında konuşmak ve kahvemizi içmek için ofisimize her zaman bekleriz.</p>
+            <p style="margin-bottom: 2rem; color: #666;">Projeleriniz hakkında bizimle aşağıdaki iletişim yollarından iletişime geçebilirsiniz.</p>
             
 
-            <div class="info-item">
-                <div class="icon">📞</div>
-                <div>
-                    <strong>Telefon</strong>
-                    <p>{{ site_info.phone }}</p>
-                </div>
-            </div>
+            
 
             <div class="info-item">
                 <div class="icon">✉️</div>
@@ -27,13 +20,7 @@
                 </div>
             </div>
 
-            <div class="map-container">
-                {% if site_info.map_link %}
-                    <iframe src="{{ site_info.map_link }}" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-                {% else %}
-                    <p style="text-align:center; padding:50px;">Harita yüklenemedi.</p>
-                {% endif %}
-            </div>
+            
         </div>
 
         <div class="contact-form-wrapper">
